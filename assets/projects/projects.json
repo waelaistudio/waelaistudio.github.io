@@ -1,0 +1,26 @@
+{
+  "studio": "WaelAiStudio",
+  "projects": [
+    {
+      "id": "car",
+      "title": "Automotive Visual",
+      "category": "AI Product Video",
+      "description": "Cinematic AI-driven visual storytelling for automotive brands.",
+      "status": "Published"
+    },
+    {
+      "id": "watch",
+      "title": "Luxury Watch",
+      "category": "AI Product Visual",
+      "description": "Premium product storytelling built around detail, motion and atmosphere.",
+      "status": "Published"
+    },
+    {
+      "id": "sneaker",
+      "title": "Sneaker Campaign",
+      "category": "AI Product Campaign",
+      "description": "Dynamic visual content designed for modern sneaker campaigns and social media.",
+      "status": "In Production"
+    }
+  ]
+}
