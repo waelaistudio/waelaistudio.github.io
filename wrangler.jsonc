@@ -9,5 +9,10 @@
   "assets": {
     "directory": ".",
     "binding": "ASSETS"
+  },
+  "secrets": {
+    "required": [
+      "TIKTOK_CLIENT_SECRET"
+    ]
   }
 }
