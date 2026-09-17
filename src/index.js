@@ -1,4 +1,4 @@
-const TIKTOK_CLIENT_KEY = "awxqyz35txcy87z1";
+const TIKTOK_CLIENT_KEY = "sbawrto8glrbd2mt2h";
 const TIKTOK_REDIRECT_URI =
   "https://waelaistudio-github-io.mohamedenwael3.workers.dev/auth/tiktok/callback";
 
