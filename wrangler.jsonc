@@ -10,6 +10,12 @@
     "directory": ".",
     "binding": "ASSETS"
   },
+  "kv_namespaces": [
+    {
+      "binding": "TIKTOK_TOKENS",
+      "id": "982f8a593c4142fbb4a9a7c5b792dd56"
+    }
+  ],
   "secrets": {
     "required": [
       "TIKTOK_CLIENT_SECRET"
