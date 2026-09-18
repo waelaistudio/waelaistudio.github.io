@@ -1,6 +1,7 @@
 name: Multi-Platform Publisher Engine
 
 on:
+workflow_dispatch:
   repository_dispatch:
     types: [telegram_publish_trigger]
 
