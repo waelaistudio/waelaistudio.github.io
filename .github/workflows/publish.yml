@@ -1,0 +1,29 @@
+name: Multi-Platform Publisher Engine
+
+on:
+  repository_dispatch:
+    types: [telegram_publish_trigger]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: uses/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Execute Publisher
+        env:
+          PAYLOAD: ${{ toJson(github.event.client_payload) }}
+        run: |
+          echo "Processing Telegram Payload..."
+          python publisher.py
