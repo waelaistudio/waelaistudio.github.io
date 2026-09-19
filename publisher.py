@@ -1,27 +1,39 @@
 import os
+import json
 import requests
 
-# 1. إعدادات Telegram Channel & Bot
+# 1. Telegram Settings
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN") or "8754723524:AAFM43M7iTZEAgiqVutMdr9XHCHcXvz6Bfw"
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID") or "-1003988112289"
 TELEGRAM_TOPIC_ID = os.environ.get("TELEGRAM_TOPIC_ID") or 5
 
-# 2. إعدادات Meta API (Facebook Page & Instagram wael.ai.studio)
+# 2. Meta API Settings
 FB_PAGE_ACCESS_TOKEN = os.environ.get("FB_PAGE_ACCESS_TOKEN")
 FB_PAGE_ID = os.environ.get("FB_PAGE_ID")
 IG_USER_ID = os.environ.get("IG_USER_ID")
 
-# 3. إعدادات TikTok Developer API (@waelmohamden)
+# 3. TikTok Settings
 TIKTOK_ACCESS_TOKEN = os.environ.get("TIKTOK_ACCESS_TOKEN")
 
-# استلام نص المحتوى ورابط الوسائط
-MESSAGE = os.environ.get("PAYLOAD") or os.environ.get("MESSAGE") or "تحديث جديد من Wael AiStudio 🚀"
-MEDIA_URL = os.environ.get("MEDIA_URL")
+# Default Message & Media URL
+MESSAGE = "تحديث جديد من Wael AiStudio 🚀"
+MEDIA_URL = None
+
+# Extract payload from GitHub Actions event file
+event_path = os.environ.get("GITHUB_EVENT_PATH")
+if event_path and os.path.exists(event_path):
+    try:
+        with open(event_path, "r", encoding="utf-8") as f:
+            event_data = json.load(f)
+            client_payload = event_data.get("client_payload", {})
+            MESSAGE = client_payload.get("message") or MESSAGE
+            MEDIA_URL = client_payload.get("media_url") or MEDIA_URL
+    except Exception as e:
+        print(f"[-] Error reading event payload: {e}")
 
 print("=== Wael AiStudio: Omnichannel Publisher Engine Started ===")
 
 def publish_to_telegram(text, media_url=None):
-    """النشر على قناة تليجرام"""
     print("[+] Publishing to Telegram...")
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {
@@ -33,7 +45,6 @@ def publish_to_telegram(text, media_url=None):
     print(f"Telegram Response: {res.status_code}")
 
 def publish_to_facebook(text, media_url=None):
-    """النشر على صفحة فيسبوك Wael AiStudio"""
     if not FB_PAGE_ACCESS_TOKEN or not FB_PAGE_ID:
         print("[-] Meta FB Tokens missing, skipping Facebook...")
         return
@@ -44,7 +55,6 @@ def publish_to_facebook(text, media_url=None):
     print(f"Facebook Response: {res.status_code}")
 
 def publish_to_instagram(media_url, caption):
-    """النشر على حساب إنستجرام wael.ai.studio"""
     if not FB_PAGE_ACCESS_TOKEN or not IG_USER_ID or not media_url:
         print("[-] Meta IG Credentials or Media URL missing, skipping Instagram...")
         return
@@ -63,7 +73,6 @@ def publish_to_instagram(media_url, caption):
         print(f"Instagram Publish Status: {res_pub.status_code}")
 
 def publish_to_tiktok(video_url, title):
-    """النشر على تيك توك @waelmohamden"""
     if not TIKTOK_ACCESS_TOKEN or not video_url:
         print("[-] TikTok Credentials or Video URL missing, skipping TikTok...")
         return
