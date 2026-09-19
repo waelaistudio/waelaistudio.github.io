@@ -20,5 +20,9 @@
     "required": [
       "TIKTOK_CLIENT_SECRET"
     ]
+  },
+  "vars": {
+    "TIKTOK_CLIENT_KEY": "sbawrto8glrbd2mt2h",
+    "TIKTOK_REDIRECT_URI": "https://waelaistudio-github-io.mohamedenwael3.workers.dev/auth/tiktok/callback"
   }
 }
