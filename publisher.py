@@ -1,10 +1,10 @@
 import os
 import requests
 
-# بيانات الاعتماد الصحيحة مفصولة
+# بيانات الاعتماد الصحيحة بالصيغة النهائيه
 bot_token = "8754723524:AAFM43M7iTZEAgiqVutMdr9XHCHcXvz6Bfw"
-chat_id = "3988112289"          # الرقم الأساسي فقط بدون شحطة مائلة
-message_thread_id = 5           # رقم الموضوع (Topic) إذا كانت المجموعة تدعم المواضيع
+chat_id = "-1003988112289"       # إضافة البادئة -100 الخاصة بالقنوات والمجموعات
+message_thread_id = 5            # رقم الموضوع (Topic) إن وجد
 
 # استلام المحتوى إن وجد، أو استخدام الرسالة الافتراضية
 payload = os.environ.get("PAYLOAD") or os.environ.get("MESSAGE")
