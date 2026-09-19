@@ -1,127 +1,128 @@
 import os
-import json
 import requests
 
-# 1. Telegram Settings
-TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN") or "8754723524:AAFM43M7iTZEAgiqVutMdr9XHCHcXvz6Bfw"
-TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID") or "-1003988112289"
-TELEGRAM_TOPIC_ID = os.environ.get("TELEGRAM_TOPIC_ID") or 5
-
-# 2. Meta API Settings
-FB_PAGE_ACCESS_TOKEN = os.environ.get("FB_PAGE_ACCESS_TOKEN")
-FB_PAGE_ID = os.environ.get("FB_PAGE_ID")
-IG_USER_ID = os.environ.get("IG_USER_ID")
-
-# 3. TikTok Settings
-TIKTOK_ACCESS_TOKEN = os.environ.get("TIKTOK_ACCESS_TOKEN")
-
-# Default Message & Media URL
-MESSAGE = "تحديث جديد من Wael AiStudio 🚀"
-MEDIA_URL = None
-
-# Extract payload from GitHub Actions event file
-event_path = os.environ.get("GITHUB_EVENT_PATH")
-if event_path and os.path.exists(event_path):
-    try:
-        with open(event_path, "r", encoding="utf-8") as f:
-            event_data = json.load(f)
-            client_payload = event_data.get("client_payload", {})
-            MESSAGE = client_payload.get("message") or MESSAGE
-            MEDIA_URL = client_payload.get("media_url") or MEDIA_URL
-    except Exception as e:
-        print(f"[-] Error reading event payload: {e}")
-
-print("=== Wael AiStudio: Omnichannel Publisher Engine Started ===")
-
-def publish_to_telegram(text, media_url=None):
-    print("[+] Publishing to Telegram...")
-    
-    # إذا وجد رابط وسائط (صورة/فيديو)
-    if media_url:
-        is_video = any(media_url.lower().endswith(ext) for ext in ['.mp4', '.mov', '.avi']) or 'reel' in media_url.lower()
-        method = "sendVideo" if is_video else "sendPhoto"
-        param_name = "video" if is_video else "photo"
-
-        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/{method}"
-        payload = {
-            "chat_id": TELEGRAM_CHAT_ID,
-            param_name: media_url,
-            "caption": text,
-            "message_thread_id": TELEGRAM_TOPIC_ID
-        }
-        res = requests.post(url, json=payload)
-        
-        # إذا فشل إرسال الوسائط كملف مباشر (مثلاً رابط ويب عادي)، يتم إرساله كـ HTML مع النص
-        if res.status_code != 200:
-            print("[-] Direct media link failed, sending as embedded link...")
-            url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-            formatted_text = f"{text}\n\n🔗 <b>Media:</b> {media_url}"
-            payload = {
-                "chat_id": TELEGRAM_CHAT_ID,
-                "text": formatted_text,
-                "parse_mode": "HTML",
-                "message_thread_id": TELEGRAM_TOPIC_ID
-            }
-            res = requests.post(url, json=payload)
-    else:
-        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-        payload = {
-            "chat_id": TELEGRAM_CHAT_ID,
-            "text": text,
-            "message_thread_id": TELEGRAM_TOPIC_ID
-        }
-        res = requests.post(url, json=payload)
-
-    print(f"Telegram Response: {res.status_code}")
-
-def publish_to_facebook(text, media_url=None):
-    if not FB_PAGE_ACCESS_TOKEN or not FB_PAGE_ID:
-        print("[-] Meta FB Tokens missing, skipping Facebook...")
+def publish_to_tiktok(text, media_url):
+    """إرسال الفيديو إلى تيك توك باستخدام TikTok Content Posting API"""
+    tiktok_token = os.getenv("TIKTOK_ACCESS_TOKEN")
+    if not tiktok_token:
+        print("⚠️ TIKTOK_ACCESS_TOKEN غير متوفر، تخطي النشر على تيك توك.")
         return
-    print("[+] Publishing to Facebook Page...")
-    url = f"https://graph.facebook.com/v19.0/{FB_PAGE_ID}/feed"
-    payload = {"message": text, "access_token": FB_PAGE_ACCESS_TOKEN}
-    res = requests.post(url, data=payload)
-    print(f"Facebook Response: {res.status_code}")
 
-def publish_to_instagram(media_url, caption):
-    if not FB_PAGE_ACCESS_TOKEN or not IG_USER_ID or not media_url:
-        print("[-] Meta IG Credentials or Media URL missing, skipping Instagram...")
+    if not media_url:
+        print("❌ تيك توك يتطلب فيديو للنشر.")
         return
-    print("[+] Publishing to Instagram Reels/Posts...")
-    container_url = f"https://graph.facebook.com/v19.0/{IG_USER_ID}/media"
-    payload = {
-        "image_url" if media_url.endswith(('.jpg', '.png')) else "video_url": media_url,
-        "caption": caption,
-        "access_token": FB_PAGE_ACCESS_TOKEN
-    }
-    res = requests.post(container_url, data=payload)
-    if res.status_code == 200:
-        creation_id = res.json().get("id")
-        pub_url = f"https://graph.facebook.com/v19.0/{IG_USER_ID}/media_publish"
-        res_pub = requests.post(pub_url, data={"creation_id": creation_id, "access_token": FB_PAGE_ACCESS_TOKEN})
-        print(f"Instagram Publish Status: {res_pub.status_code}")
 
-def publish_to_tiktok(video_url, title):
-    if not TIKTOK_ACCESS_TOKEN or not video_url:
-        print("[-] TikTok Credentials or Video URL missing, skipping TikTok...")
-        return
-    print("[+] Publishing to TikTok...")
+    print("🚀 جاري رفع الفيديو إلى تيك توك...")
     url = "https://open.tiktokapis.com/v2/post/publish/video/init/"
+    
     headers = {
-        "Authorization": f"Bearer {TIKTOK_ACCESS_TOKEN}",
-        "Content-Type": "application/json"
+        "Authorization": f"Bearer {tiktok_token}",
+        "Content-Type": "application/json; charset=UTF-8"
     }
-    body = {
-        "post_info": {"title": title, "privacy_level": "PUBLIC_TO_EVERYONE"},
-        "source_info": {"source": "FILE_URL", "video_url": video_url}
+    
+    payload = {
+        "post_info": {
+            "title": text[:150],
+            "privacy_level": "PUBLIC_TO_EVERYONE",
+            "disable_duet": False,
+            "disable_comment": False,
+            "disable_stitch": False
+        },
+        "source_info": {
+            "source": "URL_UPLOAD",
+            "video_url": media_url
+        }
     }
-    res = requests.post(url, headers=headers, json=body)
-    print(f"TikTok Response: {res.status_code}")
+
+    try:
+        response = requests.post(url, headers=headers, json=payload)
+        res_data = response.json()
+        
+        if response.status_code == 200 and res_data.get("error", {}).get("code") == "ok":
+            print("✅ تم بنجاح إنشاء جلسة النشر على تيك توك!")
+        else:
+            print(f"❌ فشل النشر على تيك توك: {res_data}")
+    except Exception as e:
+        print(f"❌ حدث خطأ أثناء الاتصال بـ تيك توك: {e}")
+
+def publish_to_facebook(text, media_url):
+    """نشر المحتوى على صفحة فيسبوك"""
+    page_id = os.getenv("FB_PAGE_ID")
+    token = os.getenv("FB_PAGE_ACCESS_TOKEN")
+    
+    if not page_id or not token:
+        print("⚠️ بيانات فيسبوك (FB_PAGE_ID أو FB_PAGE_ACCESS_TOKEN) غير متوفرة، تخطي النشر.")
+        return
+
+    print("🚀 جاري النشر على فيسبوك...")
+    url = f"https://graph.facebook.com/v18.0/{page_id}/feed"
+    
+    payload = {
+        "message": text,
+        "access_token": token
+    }
+    
+    if media_url:
+        # إذا كانت صورة أو رابط ميديا
+        url = f"https://graph.facebook.com/v18.0/{page_id}/photos"
+        payload["url"] = media_url
+
+    try:
+        response = requests.post(url, data=payload)
+        res_data = response.json()
+        if "id" in res_data:
+            print("✅ تم النشر على فيسبوك بنجاح!")
+        else:
+            print(f"❌ فشل النشر على فيسبوك: {res_data}")
+    except Exception as e:
+        print(f"❌ حدث خطأ أثناء الاتصال بفيسبوك: {e}")
+
+def publish_to_instagram(text, media_url):
+    """نشر المحتوى على إنستجرام"""
+    ig_user_id = os.getenv("IG_USER_ID")
+    token = os.getenv("FB_PAGE_ACCESS_TOKEN")
+    
+    if not ig_user_id or not token:
+        print("⚠️ بيانات إنستجرام غير متوفرة، تخطي النشر.")
+        return
+
+    if not media_url:
+        print("❌ إنستجرام يتطلب صورة أو فيديو أساسي للنشر.")
+        return
+
+    print("🚀 جاري النشر على إنستجرام...")
+    
+    # الخطوة 1: إنشاء حاوية الوسائط (Media Container)
+    container_url = f"https://graph.facebook.com/v18.0/{ig_user_id}/media"
+    container_payload = {
+        "image_url": media_url,
+        "caption": text,
+        "access_token": token
+    }
+
+    try:
+        res = requests.post(container_url, data=container_payload).json()
+        creation_id = res.get("id")
+        
+        if not creation_id:
+            print(f"❌ فشل إنشاء حاوية إنستجرام: {res}")
+            return
+
+        # الخطوة 2: نشر الحاوية
+        publish_url = f"https://graph.facebook.com/v18.0/{ig_user_id}/media_publish"
+        publish_payload = {
+            "creation_id": creation_id,
+            "access_token": token
+        }
+        
+        pub_res = requests.post(publish_url, data=publish_payload).json()
+        if "id" in pub_res:
+            print("✅ تم النشر على إنستجرام بنجاح!")
+        else:
+            print(f"❌ فشل تأكيد النشر على إنستجرام: {pub_res}")
+            
+    except Exception as e:
+        print(f"❌ حدث خطأ أثناء الاتصال بإنستجرام: {e}")
 
 if __name__ == "__main__":
-    publish_to_telegram(MESSAGE, MEDIA_URL)
-    publish_to_facebook(MESSAGE, MEDIA_URL)
-    publish_to_instagram(MEDIA_URL, MESSAGE)
-    publish_to_tiktok(MEDIA_URL, MESSAGE)
-    print("=== All Direct Publishing Jobs Completed ===")
+    print("Unified Publisher Engine Ready for Meta & TikTok.")
