@@ -35,13 +35,43 @@ print("=== Wael AiStudio: Omnichannel Publisher Engine Started ===")
 
 def publish_to_telegram(text, media_url=None):
     print("[+] Publishing to Telegram...")
-    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-    payload = {
-        "chat_id": TELEGRAM_CHAT_ID,
-        "text": text,
-        "message_thread_id": TELEGRAM_TOPIC_ID
-    }
-    res = requests.post(url, json=payload)
+    
+    # إذا وجد رابط وسائط (صورة/فيديو)
+    if media_url:
+        is_video = any(media_url.lower().endswith(ext) for ext in ['.mp4', '.mov', '.avi']) or 'reel' in media_url.lower()
+        method = "sendVideo" if is_video else "sendPhoto"
+        param_name = "video" if is_video else "photo"
+
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/{method}"
+        payload = {
+            "chat_id": TELEGRAM_CHAT_ID,
+            param_name: media_url,
+            "caption": text,
+            "message_thread_id": TELEGRAM_TOPIC_ID
+        }
+        res = requests.post(url, json=payload)
+        
+        # إذا فشل إرسال الوسائط كملف مباشر (مثلاً رابط ويب عادي)، يتم إرساله كـ HTML مع النص
+        if res.status_code != 200:
+            print("[-] Direct media link failed, sending as embedded link...")
+            url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+            formatted_text = f"{text}\n\n🔗 <b>Media:</b> {media_url}"
+            payload = {
+                "chat_id": TELEGRAM_CHAT_ID,
+                "text": formatted_text,
+                "parse_mode": "HTML",
+                "message_thread_id": TELEGRAM_TOPIC_ID
+            }
+            res = requests.post(url, json=payload)
+    else:
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+        payload = {
+            "chat_id": TELEGRAM_CHAT_ID,
+            "text": text,
+            "message_thread_id": TELEGRAM_TOPIC_ID
+        }
+        res = requests.post(url, json=payload)
+
     print(f"Telegram Response: {res.status_code}")
 
 def publish_to_facebook(text, media_url=None):
