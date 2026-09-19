@@ -1,9 +1,10 @@
 import os
 import requests
 
-# بيانات الاعتماد المباشرة
+# بيانات الاعتماد الصحيحة مفصولة
 bot_token = "8754723524:AAFM43M7iTZEAgiqVutMdr9XHCHcXvz6Bfw"
-chat_id = "3988112289/5"
+chat_id = "3988112289"          # الرقم الأساسي فقط بدون شحطة مائلة
+message_thread_id = 5           # رقم الموضوع (Topic) إذا كانت المجموعة تدعم المواضيع
 
 # استلام المحتوى إن وجد، أو استخدام الرسالة الافتراضية
 payload = os.environ.get("PAYLOAD") or os.environ.get("MESSAGE")
@@ -18,6 +19,7 @@ if not payload or payload.strip() == "null" or not payload.strip():
 url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
 data = {
     "chat_id": chat_id,
+    "message_thread_id": message_thread_id,
     "text": payload,
     "parse_mode": "Markdown"
 }
