@@ -1,27 +1,32 @@
 import os
-import json
+import requests
 
-def main():
-    print("=== Multi-Platform Publisher Engine Started ===")
-    
-    # استلام البيانات الممررة من GitHub Actions
-    payload_raw = os.getenv("PAYLOAD", "{}")
-    
-    try:
-        payload = json.loads(payload_raw) if payload_raw else {}
-    except Exception as e:
-        print(f"Warning: Failed to parse JSON: {e}")
-        payload = {}
+# بيانات الاعتماد المباشرة
+bot_token = "8754723524:AAFM43M7iTZEAgiqVutMdr9XHCHcXvz6Bfw"
+chat_id = "3988112289/5"
 
-    # التعامل مع التشغيل اليدوي (بدون بيانات تليجرام)
-    if not payload:
-        print("Notice: Manual test run detected (No payload provided).")
-        print("Status: SUCCESS - Environment & dependencies are ready.")
-        return
+# استلام المحتوى إن وجد، أو استخدام الرسالة الافتراضية
+payload = os.environ.get("PAYLOAD") or os.environ.get("MESSAGE")
 
-    # معالجة حمولة البيانات عند إرسالها من التليجرام
-    print("Processing Telegram Payload:")
-    print(json.dumps(payload, indent=2, ensure_ascii=False))
+print("=== Multi-Platform Publisher Engine Started ===")
 
-if __name__ == "__main__":
-    main()
+if not payload or payload.strip() == "null" or not payload.strip():
+    print("Notice: Manual test run detected (No payload provided). Setting default test message.")
+    payload = "🚀 **إشعار تجريبي أوتوماتيكي من GitHub Actions**\nتم تشغيل المحرك بنجاح وتأكيد الاتصال بالقناة!"
+
+# رابط إرسال الرسائل عبر Telegram API
+url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+data = {
+    "chat_id": chat_id,
+    "text": payload,
+    "parse_mode": "Markdown"
+}
+
+try:
+    response = requests.post(url, data=data)
+    if response.status_code == 200:
+        print("Status: SUCCESS - Message sent to Telegram successfully!")
+    else:
+        print(f"Status: FAILED - Telegram API responded with status code {response.status_code}: {response.text}")
+except Exception as e:
+    print(f"Status: ERROR - Failed to send request: {e}")
