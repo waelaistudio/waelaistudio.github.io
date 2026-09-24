@@ -1,209 +1,263 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WaelAiStudio - AI Content & Growth Engine</title>
+    <title>WAEL AI STUDIO</title>
     <style>
-        :root {
-            --bg-color: #080808;
-            --card-bg: #121212;
-            --accent-color: #FE2C55;
-            --text-main: #ffffff;
-            --text-muted: #a0a0a0;
-            --border-color: #222222;
-        }
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #050505;
+            color: #ffffff;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-        }
-        .wrapper {
-            max-width: 800px;
-            width: 90%;
-            margin: 40px auto;
-            padding: 30px;
-            background: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: 0 12px 40px rgba(0,0,0,0.7);
-            border: 1px solid var(--border-color);
-        }
-        header { text-align: center; margin-bottom: 40px; }
-        header h1 { font-size: 2.8rem; margin: 0 0 10px 0; letter-spacing: 1px; }
-        header p { color: var(--text-muted); font-size: 1.2rem; line-height: 1.6; }
-        
-        .section-title {
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-            margin-top: 40px;
-            font-size: 1.5rem;
-            color: #f0f0f0;
-        }
-        
-        /* Portfolio Styles */
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .portfolio-item {
-            background: #1a1a1a;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #282828;
-            text-align: center;
-        }
-        .portfolio-item h4 { margin: 0 0 5px 0; color: #fff; }
-        .portfolio-item p { margin: 0; color: var(--text-muted); font-size: 0.9rem; }
-
-        /* Distribution Engine Panel */
-        .engine-panel {
-            background: #161616;
-            padding: 20px;
-            border-radius: 14px;
-            border: 1px dashed #333;
-            margin-top: 25px;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            background: #222;
-            color: #ffc107;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-        
-        /* Grid for Platform Buttons */
-        .platform-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        .btn-platform {
-            display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 10px;
-            padding: 14px;
-            border-radius: 12px;
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            font-size: 1rem;
-            transition: transform 0.2s, filter 0.2s;
+            min-height: 100vh;
+            padding: 20px;
         }
-        .btn-platform:hover { transform: translateY(-2px); filter: brightness(1.1); }
-        .tiktok { background-color: #FE2C55; }
-        .instagram { background-color: #E1306C; }
-        .youtube { background-color: #FF0000; }
-        .facebook { background-color: #1877F2; }
 
-        footer {
-            margin-top: 50px;
+        .container {
+            width: 100%;
+            max-width: 600px;
             text-align: center;
-            border-top: 1px solid var(--border-color);
-            padding-top: 20px;
-            font-size: 0.9rem;
         }
-        footer a { color: var(--text-muted); text-decoration: none; margin: 0 10px; }
-        footer a:hover { color: #fff; }
+
+        /* Form Section Matching Screenshot */
+        .contact-box {
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 50px;
+            text-align: left;
+        }
+
+        .contact-box h2 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .contact-box p {
+            color: #666;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.65rem;
+            color: #666;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .input-group input, .input-group textarea {
+            width: 100%;
+            background: #000000;
+            border: 1px solid #1f1f1f;
+            border-radius: 4px;
+            padding: 10px;
+            color: #fff;
+            font-size: 0.85rem;
+        }
+
+        .send-btn {
+            width: 100%;
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+
+        /* Clean Unified Footer */
+        .footer-section {
+            margin-top: 20px;
+            padding-top: 30px;
+            border-top: 1px solid #111111;
+            width: 100%;
+        }
+
+        .footer-logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Interactive Links Toggle Button */
+        .social-toggle-btn {
+            background: transparent;
+            color: #ffffff;
+            border: 1px solid #333333;
+            padding: 12px 25px;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+        }
+
+        .social-toggle-btn:hover {
+            border-color: #ffffff;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* Collapsible Social Links Box */
+        .social-links-grid {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .social-links-grid.active {
+            display: flex;
+        }
+
+        .social-link-item {
+            background: #0d0d0d;
+            border: 1px solid #1f1f1f;
+            padding: 12px;
+            color: #cccccc;
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .social-link-item:hover {
+            border-color: #555555;
+            color: #ffffff;
+            background: #141414;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-links a {
+            color: #666666;
+            text-decoration: none;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+
+        .copyright {
+            color: #444444;
+            font-size: 0.65rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
 
-    <div class="wrapper">
-        <!-- الهوية والموقع الرسمي -->
-        <header>
-            <h1>WaelAiStudio</h1>
-            <p>نظام ذكي لأتمتة وإنتاج المحتوى السينمائي الرقمي وتوزيعه على منصات التواصل الاجتماعي باستخدام الـ AI وعينات الـ FFmpeg المتقدمة.</p>
-        </header>
+    <div class="container">
+        
+        <!-- Contact Form -->
+        <div class="contact-box">
+            <h2>Ready to Elevate Your Brand?</h2>
+            <p>Partner with Wael AI Studio for your upcoming luxury product launch or cinematic visual campaign. Send us a message below.</p>
+            
+            <div class="input-group">
+                <label>Your Name</label>
+                <input type="text" placeholder="">
+            </div>
+            <div class="input-group">
+                <label>Your Email</label>
+                <input type="email" placeholder="">
+            </div>
+            <div class="input-group">
+                <label>Message</label>
+                <textarea rows="3"></textarea>
+            </div>
+            
+            <button class="send-btn">Send Message &rarr;</button>
+        </div>
 
-        <!-- قسم الاستوديو والأعمال الحالي (Portfolio) -->
-        <h3 class="section-title">محفظة الأعمال والأقسام المستهدفة (Portfolio)</h3>
-        <div class="portfolio-grid">
-            <div class="portfolio-item">
-                <h4>🧴 العطور (Perfume Campaign)</h4>
-                <p>محتوى مرئي تفاعلي سينمائي</p>
+        <!-- Single Cleaned Footer Section -->
+        <div class="footer-section">
+            <div class="footer-logo">WAEL.AI.STUDIO</div>
+
+            <!-- الزر التفاعلي للمنصات -->
+            <button class="social-toggle-btn" id="socialBtn" onclick="toggleSocials()">
+                OFFICIAL PLATFORMS &larr;
+            </button>
+
+            <!-- القائمة المنبثقة للروابط المختصرة -->
+            <div class="social-links-grid" id="socialBox">
+                <a href="https://t.me/waelaistudio_bot" target="_blank" class="social-link-item">🤖 TELEGRAM BOT</a>
+                <a href="https://t.me/Wael_mohameden" target="_blank" class="social-link-item">📢 TELEGRAM CHANNEL</a>
+                <a href="https://youtube.com/@waelaistudio" target="_blank" class="social-link-item">🎥 YOUTUBE</a>
+                <a href="https://instagram.com/wael.ai.studio" target="_blank" class="social-link-item">📸 INSTAGRAM</a>
+                <a href="https://facebook.com/share/1CCzSLPNsN/" target="_blank" class="social-link-item">📘 FACEBOOK</a>
+                <a href="https://tiktok.com/@wael.ai.studio" target="_blank" class="social-link-item">🎵 TIKTOK</a>
             </div>
-            <div class="portfolio-item">
-                <h4>⌚ الساعات (Watch Campaign)</h4>
-                <p>فيديوهات ديناميكية عالية الدقة</p>
+
+            <!-- Navigation Links -->
+            <div class="nav-links">
+                <a href="#">ABOUT</a>
+                <a href="#">WORKS</a>
+                <a href="#">CONTACT</a>
+                <a href="https://github.com" target="_blank">GITHUB</a>
             </div>
-            <div class="portfolio-item">
-                <h4>👟 الأحذية (Sneaker Campaign)</h4>
-                <p>حملات ترويجية متحركة للمنتجات</p>
-            </div>
-            <div class="portfolio-item">
-                <h4>🎬 الـ Visuals والأفلام الديناميكية</h4>
-                <p>معالجة سريعة ونشر مؤتمت</p>
+
+            <!-- Copyright -->
+            <div class="copyright">
+                &copy; 2026 WAEL AI STUDIO. ALL RIGHTS RESERVED.
             </div>
         </div>
 
-        <!-- محرك التوزيع والنمو (Growth Engine Panel) -->
-        <h3 class="section-title">محرك النمو وأتمتة النشر (Growth & Distribution Engine)</h3>
-        <div class="engine-panel">
-            <div id="connection-status" class="status-badge">حالة مركز التحكم: في انتظار ربط قنوات النشر الرقمية...</div>
-            
-            <p style="font-size: 0.95rem; margin-bottom: 20px;">قم بربط وتفويض منصات النشر الحالية للسماح للـ Growth Engine (المستند لـ Termux و Cloudflare) بجدولة ونشر الفيديوهات تلقائياً:</p>
-            
-            <div class="platform-grid">
-                <!-- 1. تيك توك (رابط جاهز ومفعل للـ Sandbox) -->
-                <a class="btn-platform tiktok" href="https://tiktok.com">
-                    🎵 ربط حساب TikTok التجريبي
-                </a>
-
-                <!-- 2. إنستغرام (تجهيز مسار التفويض عبر Meta Graph API المستقبلي) -->
-                <a class="btn-platform instagram" href="https://workers.dev">
-                    📸 ربط Instagram Reels
-                </a>
-
-                <!-- 3. يوتيوب (تجهيز مسار التفويض لـ YouTube Shorts) -->
-                <a class="btn-platform youtube" href="https://workers.dev">
-                    📺 ربط YouTube Shorts
-                </a>
-
-                <!-- 4. فيسبوك (تجهيز مسار التفويض لـ Facebook Reels) -->
-                <a class="btn-platform facebook" href="https://workers.dev">
-                    📘 ربط Facebook Reels
-                </a>
-            </div>
-        </div>
-
-        <!-- قسم التواصل والتفاعل المطور (Let's Create) -->
-        <section id="contact" style="text-align: center; margin-top: 40px;">
-            <h2>Let's Create.</h2>
-            <p>هل لديك منتج، فكرة، أو مشروع تجاري تريد تحويله إلى حملة فيديو سينمائية تنتشر تلقائياً؟ نحن هنا لنجعل ذلك ممكناً.</p>
-        </section>
-
-        <!-- ذيل الصفحة (روابط السياسات والشروط المطلوبة للمراجعات) -->
-        <footer>
-            <p>© 2026 WaelAiStudio. جميع الحقوق محفوظة.</p>
-            <a href="terms.html">شروط الخدمة (Terms)</a> | 
-            <a href="privacy.html">سياسة الخصوصية (Privacy)</a>
-        </footer>
     </div>
 
     <script>
-        // كود تلقائي لمعالجة التوجيه واستلام حالات النجاح بعد ربط الحسابات
-        const urlParams = new URLSearchParams(window.location.search);
-        const status = urlParams.get('status');
-        const platform = urlParams.get('platform');
-        
-        if (status === 'success') {
-            const badge = document.getElementById('connection-status');
-            badge.innerText = `✔️ تم ربط منصة ${platform ? platform.toUpperCase() : ''} بنجاح مع محرك النمو!`;
-            badge.style.backgroundColor = "#28a745";
-            badge.style.color = "#fff";
+        function toggleSocials() {
+            const box = document.getElementById('socialBox');
+            const btn = document.getElementById('socialBtn');
+            if (box.classList.contains('active')) {
+                box.classList.remove('active');
+                btn.innerHTML = 'OFFICIAL PLATFORMS &larr;';
+            } else {
+                box.classList.add('active');
+                btn.innerHTML = 'CLOSE PLATFORMS &times;';
+            }
         }
     </script>
+
 </body>
 </html>
